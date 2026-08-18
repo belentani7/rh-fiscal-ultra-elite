@@ -45,10 +45,11 @@ class AuditorReporter:
         fields = [
             ("Base Imponible", f"{result.taxable_base:,.2f} €"),
             ("Impuestos Totales", f"{result.total_tax:,.2f} €"),
-            ("Amortización", f"{result.amortization:,.2f} €"),
-            ("Impuesto Dividendos", f"{result.dividend_tax:,.2f} €"),
             ("Beneficio Neto", f"{result.net_profit:,.2f} €"),
-            ("Tipo Efectivo", f"{result.effective_rate:.2f} %")
+            ("Tipo Efectivo", f"{result.effective_rate:.2f} %"),
+            ("Flujo de Caja (Cash Flow)", f"{result.cash_flow:,.2f} €"),
+            ("Ratio de Solvencia", f"{result.solvency_ratio:.2f}"),
+            ("Valoración Estimada", f"{result.estimated_valuation:,.2f} €")
         ]
         
         for label, val in fields:
@@ -83,9 +84,11 @@ class AuditorReporter:
         content += f"| Concepto | Valor |\n| :--- | :--- |\n"
         content += f"| Base Imponible | {result.taxable_base:,.2f} € |\n"
         content += f"| Impuestos Totales | {result.total_tax:,.2f} € |\n"
-        content += f"| Amortización | {result.amortization:,.2f} € |\n"
         content += f"| Beneficio Neto | {result.net_profit:,.2f} € |\n"
-        content += f"| Tipo Efectivo | {result.effective_rate:.2f} % |\n\n"
+        content += f"| Tipo Efectivo | {result.effective_rate:.2f} % |\n"
+        content += f"| Cash Flow | {result.cash_flow:,.2f} € |\n"
+        content += f"| Ratio Solvencia | {result.solvency_ratio:.2f} |\n"
+        content += f"| Valoración Estimada | {result.estimated_valuation:,.2f} € |\n\n"
         
         if result.alerts:
             content += "## ALERTAS DE INTUICIÓN\n"

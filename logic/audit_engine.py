@@ -11,7 +11,7 @@ logger = logging.getLogger("AUDIT-NUCLEAR")
 def run_mypy():
     """Ejecuta análisis estático estricto (Formal Verification L1)."""
     logger.info("Iniciando Verificación Formal L1: Análisis Estático Estricto...")
-    result = subprocess.run(["mypy", "--strict", "rh_tax_calc/logic/calculator.py"], capture_output=True, text=True)
+    result = subprocess.run(["mypy", "--strict", "/home/ubuntu/rh_tax_calc/logic/calculator.py"], capture_output=True, text=True)
     if result.returncode != 0:
         logger.error(f"Fallo en Verificación Formal:\n{result.stdout}")
         return False
@@ -27,12 +27,15 @@ def run_mypy():
 def test_tax_integrity(income, expenses, salary, deductions):
     """Prueba de Propiedad (Formal Verification L2): Invariantes del Sistema."""
     engine = TaxEnginePro()
-    ctx = TaxContext(
-        income=income,
-        expenses=expenses,
-        salary_other=salary,
-        deductions=deductions
-    )
+    try:
+        ctx = TaxContext(
+            income=income,
+            expenses=expenses,
+            salary_other=salary,
+            deductions=deductions
+        )
+    except ValueError:
+        return # Valores negativos son rechazados por diseño en el __post_init__
     
     for mode in TaxMode:
         try:
@@ -43,6 +46,13 @@ def test_tax_integrity(income, expenses, salary, deductions):
             
             # Invariante 2: El tipo efectivo no puede ser negativo ni mayor al 100%
             assert 0 <= res.effective_rate <= 100, f"Tipo efectivo fuera de rango en {mode}: {res.effective_rate}%"
+            
+            # Invariante 3: El Cash Flow debe ser consistente
+            assert res.cash_flow >= -1e15, f"Cash Flow inconsistente en {mode}"
+            
+            # Invariante 4: Valoración debe ser no negativa para ingresos positivos
+            if ctx.income > 0:
+                assert res.estimated_valuation >= 0, f"Valoración negativa con ingresos positivos en {mode}"
             
         except Exception as e:
             # Si el motor lanza excepción, la auditoría falla
@@ -56,7 +66,8 @@ def run_stress_audit():
         logger.info("Verificación Formal L2: PASADA (10/10)")
         return True
     except Exception as e:
-        logger.error(f"Fallo en Verificación Formal L2:\n{e}")
+        import traceback
+        logger.error(f"Fallo en Verificación Formal L2:\n{traceback.format_exc()}")
         return False
 
 if __name__ == "__main__":

@@ -8,12 +8,12 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 
 class RHAppUltra(ctk.CTk):
-    """Interfaz de Ultra-Lujo: Estética Apple Glassmorphism Pro 10/10."""
+    """Interfaz de Arquitectura Líquida: La Cúspide del Diseño Glassmorphism 2026."""
     
     def __init__(self):
         super().__init__()
         
-        # Inyección de Dependencias
+        # Servicios Core
         self.engine = TaxEnginePro()
         self.pvcu = PVCUService()
         self.reporter = AuditorReporter()
@@ -22,141 +22,181 @@ class RHAppUltra(ctk.CTk):
         self.last_result: Optional[TaxResult] = None
         self.last_evidence: Optional[Dict[str, Any]] = None
         
-        self._configure_window()
-        self._draw_ultra_interface()
+        self._setup_config()
+        self._build_liquid_interface()
 
-    def _configure_window(self):
-        self.title("RH FISCAL PRO - ULTRA ECOSYSTEM")
-        self.geometry("1280x900")
-        self.configure(fg_color="#000000") # Fondo negro puro para resaltar el cristal
+    def _setup_config(self):
+        self.title("RH FISCAL ULTRA - LIQUID ARCHITECTURE")
+        self.geometry("1300x950")
+        self.configure(fg_color="#050505") # Negro profundo absoluto
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-    def _draw_ultra_interface(self):
-        # Sidebar Glassmorphism (Blur simulado con colores profundos)
-        self.sidebar = ctk.CTkFrame(self, width=260, corner_radius=0, fg_color="#0a0a0a")
+    def _build_liquid_interface(self):
+        # 1. Sidebar con Proporción Áurea (Aprox 0.16 del ancho)
+        self.sidebar = ctk.CTkFrame(self, width=240, corner_radius=0, fg_color="#0d0d0d", border_width=0)
         self.sidebar.grid(row=0, column:0, sticky="nsew")
         
-        self.logo_label = ctk.CTkLabel(self.sidebar, text="RH PRO", font=ctk.CTkFont(family="SF Pro Display", size=28, weight="bold"), text_color="#ffffff")
-        self.logo_label.pack(pady=(50, 40))
+        # Logo con Identidad 10/10
+        self.logo_frame = ctk.CTkFrame(self.sidebar, fg_color="transparent")
+        self.logo_frame.pack(pady=(60, 50))
+        ctk.CTkLabel(self.logo_frame, text="RH", font=ctk.CTkFont(size=36, weight="bold"), text_color="#0a84ff").pack(side="left")
+        ctk.CTkLabel(self.logo_frame, text="ULTRA", font=ctk.CTkFont(size=36, weight="bold"), text_color="#ffffff").pack(side="left", padx=(5, 0))
         
         self.nav_btns = {}
         for mode in TaxMode:
-            btn = ctk.CTkButton(self.sidebar, text=mode.value.replace("_", " "), command=lambda m=mode: self._switch_mode(m),
-                               fg_color="transparent", text_color="#8e8e93", anchor="w", height=50, font=ctk.CTkFont(size=14))
-            btn.pack(fill="x", padx=25, pady=5)
+            btn = ctk.CTkButton(self.sidebar, text=mode.value.replace("_", " "), 
+                               command=lambda m=mode: self._on_nav(m),
+                               fg_color="transparent", text_color="#636366", 
+                               anchor="w", height=55, corner_radius=12,
+                               font=ctk.CTkFont(family="SF Pro Text", size=15, weight="medium"))
+            btn.pack(fill="x", padx=20, pady=4)
             self.nav_btns[mode] = btn
 
-        # Área de Contenido con efecto de Cristal Glacé
-        self.main_area = ctk.CTkScrollableFrame(self, fg_color="transparent")
-        self.main_area.grid(row=0, column:1, padx=40, pady=40, sticky="nsew")
+        # 2. Lienzo Principal (Canvas Líquido)
+        self.canvas = ctk.CTkScrollableFrame(self, fg_color="transparent", border_width=0)
+        self.canvas.grid(row=0, column:1, padx=50, pady=50, sticky="nsew")
         
-        self._render_dynamic_content()
+        self._render_view()
 
-    def _switch_mode(self, mode: TaxMode):
+    def _on_nav(self, mode: TaxMode):
         self.current_mode = mode
         for m, btn in self.nav_btns.items():
-            is_active = (m == mode)
-            btn.configure(fg_color="#1c1c1e" if is_active else "transparent", text_color="#ffffff" if is_active else "#8e8e93")
-        self._render_dynamic_content()
+            active = (m == mode)
+            btn.configure(fg_color="#1c1c1e" if active else "transparent", 
+                          text_color="#ffffff" if active else "#636366")
+        self._render_view()
 
-    def _render_dynamic_content(self):
-        for w in self.main_area.winfo_children(): w.destroy()
+    def _render_view(self):
+        for w in self.canvas.winfo_children(): w.destroy()
         
-        # Header Pro
-        header = ctk.CTkLabel(self.main_area, text=f"Auditoría Sistémica: {self.current_mode.value}", font=ctk.CTkFont(size=32, weight="bold"), text_color="#ffffff")
-        header.pack(anchor="w", pady=(0, 30))
-
-        # Panel de Datos (Cristal Glacé)
-        self.data_card = ctk.CTkFrame(self.main_area, fg_color="#1c1c1e", corner_radius=25, border_width=1, border_color="#3a3a3c")
-        self.data_card.pack(fill="x", pady=10)
+        # Título de Sección con Medidas Áureas
+        header_frame = ctk.CTkFrame(self.canvas, fg_color="transparent")
+        header_frame.pack(fill="x", pady=(0, 40))
+        ctk.CTkLabel(header_frame, text=self.current_mode.value.replace("_", " "), 
+                    font=ctk.CTkFont(size=34, weight="bold"), text_color="#ffffff").pack(side="left")
+        
+        # Panel de Inteligencia Financiera (Grid Líquido)
+        input_grid = ctk.CTkFrame(self.canvas, fg_color="#121212", corner_radius=30, border_width=1, border_color="#2c2c2e")
+        input_grid.pack(fill="x", pady=10)
         
         self.inputs = {}
-        fields = [("Ingresos Anuales", "inc"), ("Gastos Deducibles", "exp")]
+        # Definición de campos con utilidades estratégicas
+        fields = [
+            ("Ingresos Anuales (€)", "inc", "Total facturación proyectada"),
+            ("Gastos Operativos (€)", "exp", "Gastos deducibles directos"),
+            ("Pasivos Totales (€)", "liab", "Deudas y obligaciones pendientes")
+        ]
+        
         if self.current_mode == TaxMode.SL:
-            fields += [("Valor de Activos", "assets"), ("Dividendos", "div")]
-        elif self.current_mode == TaxMode.AUTONOMO:
-            fields += [("Pluriactividad", "sal"), ("Deducciones", "ded")]
+            fields += [
+                ("Activos Fijos (€)", "assets", "Maquinaria, inmuebles, tecnología"),
+                ("Dividendos a Repartir (€)", "div", "Distribución de beneficios")
+            ]
+        else:
+            fields += [
+                ("Rentas del Trabajo (€)", "sal", "Ingresos por cuenta ajena"),
+                ("Deducciones Familiares (€)", "ded", "Hijos, ascendientes, etc.")
+            ]
 
-        for label, key in fields:
-            row = ctk.CTkFrame(self.data_card, fg_color="transparent")
-            row.pack(fill="x", padx=40, pady=12)
-            ctk.CTkLabel(row, text=label, font=ctk.CTkFont(size=14), text_color="#a1a1a6").pack(side="left")
-            entry = ctk.CTkEntry(row, width=250, height=35, corner_radius=10, fg_color="#2c2c2e", border_color="#3a3a3c")
-            entry.pack(side="right")
+        for label, key, hint in fields:
+            row = ctk.CTkFrame(input_grid, fg_color="transparent")
+            row.pack(fill="x", padx=40, pady=15)
+            
+            lbl_box = ctk.CTkFrame(row, fg_color="transparent")
+            lbl_box.pack(side="left")
+            ctk.CTkLabel(lbl_box, text=label, font=ctk.CTkFont(size=14, weight="bold"), text_color="#ffffff").pack(anchor="w")
+            ctk.CTkLabel(lbl_box, text=hint, font=ctk.CTkFont(size=11), text_color="#636366").pack(anchor="w")
+            
+            entry = ctk.CTkEntry(row, width=280, height=40, corner_radius=12, fg_color="#1c1c1e", border_color="#3a3a3c", font=ctk.CTkFont(size=15))
+            entry.pack(side="right", pady=5)
             self.inputs[key] = entry
 
-        # Botón de Acción Elite
-        self.exec_btn = ctk.CTkButton(self.main_area, text="EJECUTAR INTELIGENCIA FISCAL", command=self._execute_analysis,
-                                     fg_color="#007aff", hover_color="#005bb5", height=60, corner_radius=15, font=ctk.CTkFont(size=16, weight="bold"))
-        self.exec_btn.pack(fill="x", pady=30)
+        # Botón de Ejecución con Micro-interacción Visual
+        self.btn_run = ctk.CTkButton(self.canvas, text="GENERAR AUDITORÍA E INTELIGENCIA FISCAL", 
+                                    command=self._run_analysis, fg_color="#0a84ff", hover_color="#007aff",
+                                    height=65, corner_radius=20, font=ctk.CTkFont(size=17, weight="bold"))
+        self.btn_run.pack(fill="x", pady=40)
 
-        # Monitor de Resultados
-        self.monitor_card = ctk.CTkFrame(self.main_area, fg_color="#1c1c1e", corner_radius=25, border_width=1, border_color="#3a3a3c")
-        self.monitor_card.pack(fill="both", expand=True, pady=10)
+        # Dashboard de Resultados (3 Columnas Gestalt)
+        self.dash_frame = ctk.CTkFrame(self.canvas, fg_color="transparent")
+        self.dash_frame.pack(fill="x", pady=10)
         
-        self.monitor_text = ctk.CTkTextbox(self.monitor_card, fg_color="transparent", font=ctk.CTkFont(family="Consolas", size=15), text_color="#e5e5e7")
-        self.monitor_text.pack(padx=30, pady=30, fill="both", expand=True)
+        self.monitor = ctk.CTkTextbox(self.dash_frame, fg_color="#121212", corner_radius=30, 
+                                     border_width=1, border_color="#2c2c2e", 
+                                     font=ctk.CTkFont(family="JetBrains Mono", size=15), 
+                                     text_color="#e5e5e7", height=350)
+        self.monitor.pack(fill="both", expand=True)
         
-        # Barra de Exportación de Lujo
-        export_bar = ctk.CTkFrame(self.monitor_card, fg_color="transparent")
-        export_bar.pack(fill="x", padx=30, pady=(0, 30))
-        ctk.CTkButton(export_bar, text="EXPORTAR AUDITORÍA PDF", command=self._export_audit, fg_color="#ff9500", corner_radius=10, width=220).pack(side="right", padx=10)
+        # Action Center (Cierre Gestalt)
+        action_center = ctk.CTkFrame(self.canvas, fg_color="transparent")
+        action_center.pack(fill="x", pady=30)
+        ctk.CTkButton(action_center, text="DESCARGAR PDF CERTIFICADO", command=lambda: self._export("pdf"), 
+                     fg_color="#30d158", text_color="#ffffff", corner_radius=15, height=50, width=250).pack(side="right", padx=10)
+        ctk.CTkButton(action_center, text="ANÁLISIS ESTRATÉGICO MD", command=lambda: self._export("md"), 
+                     fg_color="#5856d6", text_color="#ffffff", corner_radius=15, height=50, width=250).pack(side="right", padx=10)
 
-    def _execute_analysis(self):
+    def _run_analysis(self):
         try:
-            raw = {k: float(v.get() or 0) for k, v in self.inputs.items()}
-            raw["mode"] = self.current_mode.value
-            raw["income"] = raw.get("inc", 0)
-            raw["expenses"] = raw.get("exp", 0)
+            data = {k: float(v.get() or 0) for k, v in self.inputs.items()}
+            data["mode"] = self.current_mode.value
+            data["income"] = data.get("inc", 0)
+            data["expenses"] = data.get("exp", 0)
+            data["liabilities"] = data.get("liab", 0)
             
-            # Validación PVC-U (Garantía de Integridad)
-            self.last_evidence = self.pvcu.validate(raw)
+            # Validación Nuclear PVC-U
+            self.last_evidence = self.pvcu.validate(data)
             
-            # Ejecución de Motor Pro
+            # Motor Multidimensional
             ctx = TaxContext(
-                income=raw["income"],
-                expenses=raw["expenses"],
-                assets_value=raw.get("assets", 0),
-                dividend_payout=raw.get("div", 0),
-                salary_other=raw.get("sal", 0),
-                deductions=raw.get("ded", 0)
+                income=data["income"],
+                expenses=data["expenses"],
+                liabilities=data["liabilities"],
+                assets_value=data.get("assets", 0),
+                dividend_payout=data.get("div", 0),
+                salary_other=data.get("sal", 0),
+                deductions=data.get("ded", 0)
             )
             
             self.last_result = self.engine.run(self.current_mode, ctx)
-            self._update_monitor()
+            self._update_dash()
             
         except PVCUValidationError as e:
-            messagebox.showwarning("PVC-U Integrity Alert", str(e))
+            messagebox.showwarning("Fallo de Integridad", str(e))
         except Exception as e:
-            messagebox.showerror("System Error", f"Fallo Crítico: {e}")
+            messagebox.showerror("Error Sistémico", f"Fallo en la cadena de cálculo: {e}")
 
-    def _update_monitor(self):
+    def _update_dash(self):
         res, ev = self.last_result, self.last_evidence
-        output = f"╔══════════════════════════════════════════════════════════╗\n"
-        output += f"║ CERTIFICACIÓN DE INTEGRIDAD PVC-U v12.0 ║\n"
-        output += f"╚══════════════════════════════════════════════════════════╝\n\n"
-        output += f"🛡️ EVIDENCIA ID: {ev['id'][:12]}...\n"
-        output += f"🛡️ HASH: {ev['hash'][:24]}...\n"
-        output += f"🛡️ RIESGO: {ev['risk']}\n"
-        output += f"────────────────────────────────────────────────────────────\n"
-        output += f"➤ BASE IMPONIBLE: {res.taxable_base:,.2f} €\n"
-        output += f"➤ IMPUESTOS:      {res.total_tax:,.2f} €\n"
-        output += f"➤ BENEFICIO NETO: {res.net_profit:,.2f} €\n"
-        output += f"➤ TIPO EFECTIVO:  {res.effective_rate:.2f} %\n"
+        out = f"╔══════════════════════════════════════════════════════════╗\n"
+        out += f"║ RH FISCAL ULTRA - CERTIFICACIÓN DE INTEGRIDAD v12.0 ║\n"
+        out += f"╚══════════════════════════════════════════════════════════╝\n\n"
+        out += f"🛡️ HASH EVIDENCIA: {ev['hash']}\n"
+        out += f"🛡️ NIVEL DE RIESGO: {ev['risk']}\n"
+        out += f"────────────────────────────────────────────────────────────\n"
+        out += f"📊 MÉTRICAS TRIBUTARIAS:\n"
+        out += f"   • Base Imponible:  {res.taxable_base:,.2f} €\n"
+        out += f"   • Carga Fiscal:    {res.total_tax:,.2f} €\n"
+        out += f"   • Tipo Efectivo:   {res.effective_rate:.2f} %\n\n"
+        out += f"📈 INTELIGENCIA ESTRATÉGICA:\n"
+        out += f"   • Cash Flow:       {res.cash_flow:,.2f} €\n"
+        out += f"   • Ratio Solvencia: {res.solvency_ratio:.2f}\n"
+        out += f"   • Valoración Est:  {res.estimated_valuation:,.2f} €\n\n"
         
         if res.alerts:
-            output += f"\n⚡ ALERTAS DE INTUICIÓN FISCAL:\n"
-            for a in res.alerts: output += f"  • {a}\n"
+            out += f"⚡ ALERTAS DE INTUICIÓN FISCAL:\n"
+            for a in res.alerts: out += f"   ! {a}\n"
             
-        self.monitor_text.delete("1.0", "end")
-        self.monitor_text.insert("1.0", output)
+        self.monitor.delete("1.0", "end")
+        self.monitor.insert("1.0", out)
 
-    def _export_audit(self):
+    def _export(self, fmt):
         if not self.last_result: return
-        path = f"rh_tax_calc/templates/audit_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
-        self.reporter.generate_pdf(self.last_result, self.last_evidence, path)
-        messagebox.showinfo("Exportación Exitosa", f"Auditoría de alta fidelidad generada en:\n{path}")
+        ts = datetime.now().strftime('%Y%m%d_%H%M')
+        path = f"rh_tax_calc/templates/audit_{ts}.{fmt}"
+        if fmt == "pdf": self.reporter.generate_pdf(self.last_result, self.last_evidence, path)
+        else: self.reporter.generate_markdown(self.last_result, self.last_evidence, path)
+        messagebox.showinfo("Éxito", f"Documento {fmt.upper()} generado en:\n{path}")
 
 if __name__ == "__main__":
     app = RHAppUltra()
